@@ -52,8 +52,9 @@ def start_recorders(source_url: str, channel: str, segments: Path, logdir: Path)
         # Stream quality defaults to best; use CAPTURE_QUALITY to override if needed.
         quality = os.getenv('CAPTURE_QUALITY', 'best')
         streamlink = subprocess.Popen(
-            ['streamlink', '--stdout', source_url, quality],
-            stdout=subprocess.PIPE, stderr=streamlink_log,
+            ['streamlink', '--loglevel', 'debug', '--stdout', source_url, quality],
+            stdout=subprocess.PIPE,
+            stderr=None,
         )
         # FFmpeg consumes Streamlink's bytes, rather than the Twitch HTML page.
         cmd = ffmpeg_record_cmd('file:pipe:0', segments)
