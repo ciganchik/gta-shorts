@@ -56,9 +56,48 @@ async def set_channel(request:Request):
     except (ValueError,KeyError) as e: raise HTTPException(400,str(e))
     status=await channel_status(channel)
     if not status['exists']: raise HTTPException(404,'Channel not found')
-    put_setting('channel',channel)
+    # Changing a channel stops the old recording immediately after the capture worker polls DB.
+    with connect() as db:
+        old = db.execute('SELECT value FROM settings WHERE key=%s', ('channel',)).fetchone()
+        if old is None or old['value'] != channel:
+            for key, value in [('channel', channel), ('capture_enabled', 'false'),
+                               ('capture_permission_channel', '')]:
+                db.execute('INSERT INTO settings(key,value) VALUES(%s,%s) '
+                           'ON CONFLICT(key) DO UPDATE SET value=EXCLUDED.value', (key, value))
     return {'saved':True,'channel':channel,'status':status,
-            'note':'Only monitor channels you are authorized to access and process.'}
+            'note':'Chat and capture will switch automatically. Recording remains OFF until authorized.'}
+
+@app.post('/api/capture/start')
+async def start_capture(request: Request):
+    require_admin(request)
+    data = await request.json()
+    if data.get('permission_confirmed') is not True:
+        raise HTTPException(400, 'Confirm channel-owner permission for recording and editing')
+    with connect() as db:
+        channel = db.execute('SELECT value FROM settings WHERE key=%s', ('channel',)).fetchone()
+        if not channel or not channel['value']:
+            raise HTTPException(400, 'Select a channel first')
+        for key, value in [('capture_permission_channel', channel['value']), ('capture_enabled', 'true')]:
+            db.execute('INSERT INTO settings(key,value) VALUES(%s,%s) '
+                       'ON CONFLICT(key) DO UPDATE SET value=EXCLUDED.value', (key,value))
+    return {'capture_requested': True, 'channel': channel['value']}
+
+@app.post('/api/capture/stop')
+def stop_capture(request: Request):
+    require_admin(request)
+    put_setting('capture_enabled', 'false')
+    return {'capture_requested': False}
+
+@app.get('/api/capture/status')
+def capture_status(request: Request):
+    require_admin(request)
+    channel = get_setting('channel', '')
+    permitted = get_setting('capture_permission_channel', '') == channel
+    requested = get_setting('capture_enabled', 'false') == 'true' and permitted
+    with connect() as db:
+        row = db.execute('SELECT value FROM settings WHERE key=%s', ('capture_heartbeat',)).fetchone()
+    heartbeat = json.loads(row['value']) if row else {}
+    return {'channel':channel, 'capture_requested':requested, 'worker':heartbeat}
 
 @app.get('/api/status')
 async def status(request:Request):

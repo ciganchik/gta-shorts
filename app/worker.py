@@ -49,6 +49,9 @@ def parse_time(timestamp):
     if not timestamp:return dt.datetime.now(dt.timezone.utc)
     return dt.datetime.fromisoformat(timestamp.replace('Z','+00:00'))
 
+class ChannelChanged(Exception):
+    pass
+
 class ChannelMonitor:
     def __init__(self,channel):
         self.channel=channel
@@ -105,7 +108,13 @@ async def run_channel(channel):
             async with websockets.connect(url,ping_interval=25,ping_timeout=25,max_size=2**20) as ws:
                 # recommended: subscribe within 10s of welcome
                 while True:
-                    raw=await asyncio.wait_for(ws.recv(),timeout=125)
+                    # Poll selected channel independently of message traffic.
+                    if get_setting('channel') != channel:
+                        raise ChannelChanged()
+                    try:
+                        raw=await asyncio.wait_for(ws.recv(),timeout=5)
+                    except asyncio.TimeoutError:
+                        continue
                     obj=json.loads(raw)
                     kind=obj.get('metadata',{}).get('message_type')
                     if kind=='session_welcome':
@@ -121,6 +130,9 @@ async def run_channel(channel):
                             monitor.message(obj['payload'],obj.get('metadata',{}).get('message_timestamp'))
                     elif kind=='revocation':
                         raise RuntimeError('Twitch revoked the chat subscription')
+        except ChannelChanged:
+            log.info('Channel changed; closing old EventSub session for %s', channel)
+            return
         except Exception:
             log.exception('EventSub disconnected; retrying')
             url=WS
