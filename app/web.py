@@ -8,6 +8,8 @@ from .core import init_db, connect, normalize_channel, get_setting, put_setting
 from .twitch import channel_status
 
 app=FastAPI(title='GTA Shorts Studio MVP')
+from .clip_library import router as clip_library_router
+app.include_router(clip_library_router)
 ADMIN_KEY=os.getenv('ADMIN_KEY','')
 REDIRECT_URI=os.getenv('TWITCH_REDIRECT_URI','')
 FERNET_KEY=os.getenv('FERNET_KEY','')
