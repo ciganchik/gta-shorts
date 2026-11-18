@@ -61,7 +61,12 @@ def start_recorders(source_url: str, channel: str, segments: Path, logdir: Path)
         ffmpeg_log = open(logdir / 'ffmpeg.log', 'ab', buffering=0)
         logs.append(ffmpeg_log)
         try:
-            ffmpeg = subprocess.Popen(cmd, stdin=streamlink.stdout, stdout=subprocess.DEVNULL, stderr=ffmpeg_log)
+            ffmpeg = subprocess.Popen(
+                cmd,
+                stdin=streamlink.stdout,
+                stdout=subprocess.DEVNULL,
+                stderr=None,
+            )
         except Exception:
             streamlink.terminate()
             streamlink.wait(timeout=10)
