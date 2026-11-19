@@ -76,12 +76,24 @@ def create_clip(folder: Path, output: Path, event_at: dt.datetime, pre: int = 20
         for path in paths:
             manifest.write("file '" + str(path.resolve()).replace("'", "'\\''") + "'\n")
     try:
+        # Quality-first defaults; user may lower quality if CPU/RAM cannot sustain 1080p60.
+        crf = int(os.getenv('CLIP_CRF', '18'))
+        if not 14 <= crf <= 28:
+            raise ValueError('CLIP_CRF must be between 14 and 28')
+        preset = os.getenv('CLIP_PRESET', 'veryfast')
+        if preset not in ('ultrafast', 'superfast', 'veryfast', 'faster', 'fast', 'medium'):
+            raise ValueError('Unsupported CLIP_PRESET')
+        audio_bitrate = os.getenv('CLIP_AUDIO_BITRATE', '192k')
+        if audio_bitrate not in ('128k', '160k', '192k', '256k'):
+            raise ValueError('Unsupported CLIP_AUDIO_BITRATE')
         cmd = ['ffmpeg', '-hide_banner', '-nostdin', '-loglevel', 'error', '-y',
                '-f', 'concat', '-safe', '0', '-i', str(manifest_path),
                '-ss', f'{seek:.3f}', '-t', str(pre + post),
                '-map', '0:v:0', '-map', '0:a?', '-c:v', 'libx264',
-               '-preset', 'veryfast', '-crf', '23', '-c:a', 'aac', '-b:a', '128k',
+               '-preset', preset, '-crf', str(crf),
+               '-threads', '2', '-c:a', 'aac', '-b:a', audio_bitrate,
                '-movflags', '+faststart', str(output)]
+        log.info('Encoding %s: CRF=%s preset=%s audio=%s', output.name, crf, preset, audio_bitrate)
         run(cmd, check=True, capture_output=True)
         if not output.is_file() or output.stat().st_size == 0:
             raise RuntimeError('FFmpeg completed without a usable MP4')
