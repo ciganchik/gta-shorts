@@ -13,6 +13,11 @@
 .section-content{padding-top:16px}
 .section-fold:not([open]){padding-top:18px;padding-bottom:18px}
 .section-fold .section-content .top-row{margin-bottom:8px}
+.shorts-controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}
+.shorts-controls button,.shorts-controls a{font:inherit;min-height:35px;padding:7px 11px;border-radius:9px;text-decoration:none}
+.shorts-controls .button{min-height:35px}
+.shorts-info{color:var(--muted);font-size:12px;margin-top:7px}
+.shorts-player{max-width:360px;width:100%;max-height:640px;aspect-ratio:9/16;object-fit:contain;background:#000;border-radius:11px;margin-top:9px}
 </style></head><body><main>
 <div class="head"><div class="logo">◉ Shorts Studio</div><span class="chip">MVP · Chat monitor</span></div>
 <section class="card"><h1>Студия клипов</h1><p class="muted compact">Выбери канал Twitch для мониторинга, записи и библиотеки клипов.</p>
@@ -172,8 +177,55 @@ function buildClipItem(clip){
   close.onclick=()=>closePreviewHost(details);
   details.addEventListener('toggle',()=>{ if(!details.open) closePreviewHost(details); });
 
+  const shortsControls=document.createElement('div');shortsControls.className='shorts-controls';
+  const create=document.createElement('button');create.type='button';create.className='secondary';create.textContent='Создать Shorts 9:16';
+  const shortsPlay=document.createElement('button');shortsPlay.type='button';shortsPlay.textContent='▶ Shorts';shortsPlay.hidden=true;
+  const shortsDl=document.createElement('a');shortsDl.className='button secondary';shortsDl.textContent='Скачать Shorts';shortsDl.hidden=true;shortsDl.href='/api/clips/'+clip.id+'/shorts/download';shortsDl.rel='noreferrer';
+  const shortsInfo=document.createElement('div');shortsInfo.className='shorts-info';shortsInfo.textContent='';
+  const shortsVideo=document.createElement('video');shortsVideo.controls=true;shortsVideo.playsInline=true;shortsVideo.preload='none';shortsVideo.className='shorts-player';shortsVideo.hidden=true;
+  const closeShorts=document.createElement('button');closeShorts.type='button';closeShorts.className='icon-close';closeShorts.textContent='✕ Закрыть Shorts';closeShorts.hidden=true;
+  const stopShorts=()=>{shortsVideo.pause();shortsVideo.removeAttribute('src');shortsVideo.load();shortsVideo.hidden=true;closeShorts.hidden=true};
+  const setShortsStatus=status=>{
+    const ready=status==='uploaded';
+    create.hidden=ready;
+    shortsPlay.hidden=!ready;shortsDl.hidden=!ready;
+    shortsInfo.textContent=ready?'Вертикальный MP4 готов':status==='processing'?'Создаём вертикальное видео…':status==='queued'?'В очереди на обработку…':status==='failed'?'Ошибка обработки. Можно повторить.':'';
+    if(status==='failed'){create.textContent='Повторить Shorts';create.hidden=false;}
+  };
+  let poll=null;
+  const cancelPoll=()=>{if(poll){clearInterval(poll);poll=null}};
+  const loadShorts=async()=>{
+    try{
+      const d=await getJson('/api/clips/'+clip.id+'/shorts');
+      setShortsStatus(d.status);
+      if(d.status==='failed')shortsInfo.textContent='Ошибка: '+(d.error||'неизвестная ошибка');
+      if(!['processing','queued'].includes(d.status))cancelPoll();
+      else if(!poll)poll=setInterval(()=>{if(details.open)loadShorts();else cancelPoll()},8000);
+    }catch(e){shortsInfo.textContent='Не удалось проверить Shorts: '+e.message;cancelPoll();}
+  };
+  create.onclick=async()=>{
+    if(!confirm('Подтверждаешь право на создание вертикальной версии этого клипа?'))return;
+    create.disabled=true;
+    try{
+      await getJson('/api/clips/'+clip.id+'/shorts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({permission_confirmed:true})});
+      await loadShorts();
+    }catch(e){shortsInfo.textContent='Ошибка: '+e.message}
+    finally{create.disabled=false}
+  };
+  shortsPlay.onclick=()=>{
+    closeAllClipPreviews();
+    shortsVideo.hidden=false;closeShorts.hidden=false;
+    shortsVideo.src='/api/clips/'+clip.id+'/shorts/play';shortsVideo.load();
+    shortsVideo.play().catch(()=>{});
+  };
+  closeShorts.onclick=stopShorts;
+  details.addEventListener('toggle',()=>{
+    if(details.open)loadShorts();
+    else{cancelPoll();stopShorts();}
+  });
+  shortsControls.append(create,shortsPlay,shortsDl);
   actions.append(play,download);
-  body.append(hint,actions,preview);
+  body.append(hint,actions,preview,shortsControls,shortsInfo,shortsVideo,closeShorts);
   details.append(body);
   return details;
 }

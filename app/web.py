@@ -10,12 +10,16 @@ from .twitch import channel_status
 app=FastAPI(title='GTA Shorts Studio MVP')
 from .clip_library import router as clip_library_router
 app.include_router(clip_library_router)
+from .shorts_engine import router as shorts_router, initialize as init_shorts
+app.include_router(shorts_router)
 ADMIN_KEY=os.getenv('ADMIN_KEY','')
 REDIRECT_URI=os.getenv('TWITCH_REDIRECT_URI','')
 FERNET_KEY=os.getenv('FERNET_KEY','')
 
 @app.on_event('startup')
-def startup(): init_db()
+def startup():
+    init_db()
+    init_shorts()
 
 def authorized(request):
     # Browser session via cookie after login with password; API also supports X-Admin-Key
