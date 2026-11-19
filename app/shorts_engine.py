@@ -168,12 +168,9 @@ def process_job(job):
         client.download_file(bucket,source_key,str(source))
         if source.stat().st_size == 0:
             raise RuntimeError('Empty original MP4')
-        cmd=render_cmd(source,output)
-        log.info('Rendering clip id=%s',job['clip_id'])
-        try:
-            subprocess.run(cmd,check=True,capture_output=True,timeout=1500)
-        except subprocess.CalledProcessError as exc:
-            raise RuntimeError('FFmpeg: '+exc.stderr.decode('utf-8','replace')[-600:]) from exc
+        from .shorts_v4 import render_v4
+        log.info('Rendering V4 clip id=%s',job['clip_id'])
+        render_v4(source,output,Path(tmp))
         if not output.is_file() or output.stat().st_size < 1024:
             raise RuntimeError('Rendered MP4 missing/empty')
         client.upload_file(str(output),bucket,key,ExtraArgs={'ContentType':'video/mp4'})

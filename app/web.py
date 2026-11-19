@@ -12,6 +12,8 @@ from .clip_library import router as clip_library_router
 app.include_router(clip_library_router)
 from .shorts_engine import router as shorts_router, initialize as init_shorts
 app.include_router(shorts_router)
+from .shorts_v4 import router as shorts_v4_router, configure_db as init_v4
+app.include_router(shorts_v4_router)
 ADMIN_KEY=os.getenv('ADMIN_KEY','')
 REDIRECT_URI=os.getenv('TWITCH_REDIRECT_URI','')
 FERNET_KEY=os.getenv('FERNET_KEY','')
@@ -20,6 +22,7 @@ FERNET_KEY=os.getenv('FERNET_KEY','')
 def startup():
     init_db()
     init_shorts()
+    init_v4()
 
 def authorized(request):
     # Browser session via cookie after login with password; API also supports X-Admin-Key

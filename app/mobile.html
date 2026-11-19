@@ -187,6 +187,7 @@ function buildClipItem(clip){
   const stopShorts=()=>{shortsVideo.pause();shortsVideo.removeAttribute('src');shortsVideo.load();shortsVideo.hidden=true;closeShorts.hidden=true};
   const setShortsStatus=status=>{
     const ready=status==='uploaded';
+    createV4.disabled=['queued','processing'].includes(status);
     create.hidden=ready;
     shortsPlay.hidden=!ready;shortsDl.hidden=!ready;
     shortsInfo.textContent=ready?'Вертикальный MP4 готов':status==='processing'?'Создаём вертикальное видео…':status==='queued'?'В очереди на обработку…':status==='failed'?'Ошибка обработки. Можно повторить.':'';
@@ -223,7 +224,22 @@ function buildClipItem(clip){
     if(details.open)loadShorts();
     else{cancelPoll();stopShorts();}
   });
-  shortsControls.append(create,shortsPlay,shortsDl);
+  const createV4=document.createElement('button');
+  createV4.type='button';createV4.className='secondary';
+  createV4.textContent='Пересоздать V4 (игра + субтитры)';
+  createV4.onclick=async()=>{
+    if(!confirm('Подтверждаю разрешение на монтаж этого клипа и создание Shorts V4. Готовая новая версия заменит текущий вертикальный MP4.'))return;
+    createV4.disabled=true;stopShorts();
+    try{
+      await getJson('/api/clips/'+clip.id+'/shorts/v4',{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({permission_confirmed:true})
+      });
+      await loadShorts();
+    }catch(e){shortsInfo.textContent='Не удалось создать V4: '+e.message;}
+    finally{createV4.disabled=false;}
+  };
+  shortsControls.append(create,shortsPlay,shortsDl,createV4);
   actions.append(play,download);
   body.append(hint,actions,preview,shortsControls,shortsInfo,shortsVideo,closeShorts);
   details.append(body);
