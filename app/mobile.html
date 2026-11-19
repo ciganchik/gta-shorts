@@ -1,45 +1,172 @@
 <!doctype html>
 <html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0b101a"><meta name="apple-mobile-web-app-capable" content="yes"><title>GTA Shorts Studio</title>
 <style>
-:root{color-scheme:dark;--bg:#0b101a;--card:#161f2e;--line:#2a3a50;--txt:#edf3fb;--muted:#9aa9bb;--accent:#61a8ff;--good:#4edba8}*{box-sizing:border-box}body{font:15px/1.48 -apple-system,BlinkMacSystemFont,system-ui,sans-serif;background:var(--bg);color:var(--txt);margin:0}main{max-width:850px;margin:auto;padding:22px 16px 90px}.head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:22px}.logo{font-size:21px;font-weight:800;letter-spacing:-.5px}.chip{font-size:12px;color:var(--good);background:#11382d;border:1px solid #20604e;border-radius:90px;padding:6px 10px}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin:14px 0}h1{font-size:19px;margin:0 0 6px}h2{font-size:16px;margin:0 0 12px}.muted{color:var(--muted)}p{margin:8px 0 14px}.row{display:flex;gap:9px;align-items:center;flex-wrap:wrap}input,button{font:inherit;border-radius:11px;padding:12px 13px}input{background:#0c1523;border:1px solid #3a4c61;color:var(--txt);width:100%;min-width:0}input:focus{outline:2px solid var(--accent);outline-offset:1px}button,.button{display:inline-flex;justify-content:center;align-items:center;text-decoration:none;color:#081523;background:var(--accent);font-weight:700;border:0;min-height:46px;cursor:pointer}.button.secondary{background:#27364b;color:var(--txt)}.buttons{display:flex;gap:9px;margin-top:12px}.buttons>*{flex:1}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.metric{background:#101a28;border:1px solid var(--line);border-radius:12px;padding:12px}.metric strong{display:block;font-size:22px}.metric small{color:var(--muted);font-size:11px}.event{padding:12px 0;border-bottom:1px solid var(--line);display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.event:last-child{border:0}.score{background:#283a52;border-radius:9px;padding:7px 9px;font-weight:800;white-space:nowrap}.error{color:#ffaaa8}.ok{color:var(--good)}.note{font-size:12px;color:var(--muted)}.hidden{display:none}a{color:var(--accent)}@media (min-width:600px){main{padding:36px 28px}.card{padding:24px}.grid{gap:14px}}
- .clip-select{font:inherit;border-radius:10px;padding:11px;background:#0c1523;border:1px solid #3a4c61;color:var(--txt);width:100%;margin:8px 0 12px}
-.clip-actions{display:flex;gap:8px;flex-wrap:wrap}.clip-actions button,.clip-actions a{font:inherit;padding:7px 11px;min-height:36px;border-radius:9px;text-decoration:none}.clip-actions .button{min-height:36px}
-.clip-info{display:flex;gap:10px;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;margin-bottom:8px}
+:root{color-scheme:dark;--bg:#0b101a;--card:#161f2e;--line:#2a3a50;--txt:#edf3fb;--muted:#9aa9bb;--accent:#61a8ff;--good:#4edba8}*{box-sizing:border-box}body{font:15px/1.48 -apple-system,BlinkMacSystemFont,system-ui,sans-serif;background:var(--bg);color:var(--txt);margin:0}main{max-width:850px;margin:auto;padding:22px 16px 90px}.head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:22px}.logo{font-size:21px;font-weight:800;letter-spacing:-.5px}.chip{font-size:12px;color:var(--good);background:#11382d;border:1px solid #20604e;border-radius:90px;padding:6px 10px}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin:14px 0}h1{font-size:19px;margin:0 0 6px}h2{font-size:16px;margin:0 0 12px}.muted{color:var(--muted)}p{margin:8px 0 14px}.row{display:flex;gap:9px;align-items:center;flex-wrap:wrap}input,button,select{font:inherit;border-radius:11px;padding:12px 13px}input,select{background:#0c1523;border:1px solid #3a4c61;color:var(--txt);width:100%;min-width:0}input:focus,select:focus{outline:2px solid var(--accent);outline-offset:1px}button,.button{display:inline-flex;justify-content:center;align-items:center;text-decoration:none;color:#081523;background:var(--accent);font-weight:700;border:0;min-height:46px;cursor:pointer}.button.secondary,button.secondary{background:#27364b;color:var(--txt)}.buttons{display:flex;gap:9px;margin-top:12px}.buttons>*{flex:1}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.metric{background:#101a28;border:1px solid var(--line);border-radius:12px;padding:12px}.metric strong{display:block;font-size:22px}.metric small{color:var(--muted);font-size:11px}.score{background:#283a52;border-radius:9px;padding:7px 9px;font-weight:800;white-space:nowrap}.error{color:#ffaaa8}.ok{color:var(--good)}.note{font-size:12px;color:var(--muted)}.hidden{display:none}a{color:var(--accent)}.compact{margin:6px 0 10px}.clip-select{margin:8px 0 12px}.accordion-list{display:flex;flex-direction:column;gap:10px}.accordion-item{background:#111a28;border:1px solid var(--line);border-radius:14px;overflow:hidden}.accordion-item summary{list-style:none;display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:14px 14px;cursor:pointer}.accordion-item summary::-webkit-details-marker{display:none}.summary-left{display:flex;align-items:flex-start;gap:10px;min-width:0}.summary-arrow{font-size:16px;line-height:1;color:var(--muted);transform:translateY(2px);transition:transform .18s ease}.accordion-item[open] .summary-arrow{transform:rotate(90deg) translateX(1px)}.summary-text{min-width:0}.summary-text strong{display:block}.summary-meta{font-size:12px;color:var(--muted);margin-top:2px;word-break:break-word}.accordion-body{padding:0 14px 14px}.clip-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.clip-actions button,.clip-actions a{font:inherit;padding:8px 11px;min-height:36px;border-radius:9px;text-decoration:none}.clip-preview{margin-top:12px;padding:12px;border:1px solid var(--line);border-radius:12px;background:#0c1523}.clip-preview-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}.clip-preview-title{font-size:13px;font-weight:700}.icon-close{min-height:auto;padding:6px 10px;border-radius:9px;background:#27364b;color:var(--txt)}.clip-preview video{display:block;width:100%;max-height:480px;background:#000;border-radius:12px}.top-row{display:flex;justify-content:space-between;align-items:center;gap:10px}.top-row .muted{font-size:12px}.hint{font-size:12px;color:var(--muted)}@media (min-width:600px){main{padding:36px 28px}.card{padding:24px}.grid{gap:14px}}
 </style></head><body><main>
 <div class="head"><div class="logo">◉ GTA Shorts Studio</div><span class="chip">MVP · Chat monitor</span></div>
-<section class="card"><h1>Мониторинг Twitch</h1><p class="muted">Вставь ссылку на разрешённый канал. Пока отслеживаются всплески чата; запись видео и Shorts появятся на следующем этапе.</p>
+<section class="card"><h1>Студия клипов</h1><p class="muted compact">Выбери канал Twitch для мониторинга, записи и библиотеки клипов.</p>
 <label for="url">Ссылка на трансляцию</label><input id="url" placeholder="https://www.twitch.tv/channel" autocomplete="off" value="__CHANNEL__">
-<div class="buttons"><button onclick="save()" id="save">Сохранить канал</button><a class="button secondary" href="/auth/twitch">Подключить Twitch</a></div><p class="note" id="notice" role="status">Канал можно менять без перезапуска Heroku. Смена канала останавливает предыдущую запись.</p></section>
-<section class="card"><h2>Видеозахват</h2><p class="muted">Выбирай только трансляции с разрешением владельца на запись и переработку. Запись стартует отдельным dyno capture.</p>
+<div class="buttons"><button onclick="save()" id="save">Сохранить канал</button><a class="button secondary" href="/auth/twitch">Подключить Twitch</a></div></section>
+<section class="card"><h2>Видеозахват</h2><p class="muted compact">Выбирай только трансляции с разрешением владельца на запись и переработку.</p>
 <label class="row"><input id="permission" type="checkbox" style="width:auto">Подтверждаю разрешение владельца выбранного канала на запись и монтаж.</label>
-<div class="buttons"><button id="capture-start" onclick="captureStart()">Начать запись</button><button class="button secondary" onclick="captureStop()">Остановить</button></div>
-<p class="note" id="capture-state">Проверяем состояние записи…</p></section>
-<section class="card"><h2>Состояние</h2><div class="grid"><div class="metric"><strong id="live">—</strong><small>Стрим</small></div><div class="metric"><strong id="audience">—</strong><small>Зрители</small></div><div class="metric"><strong id="chat">—</strong><small>OAuth чата</small></div></div><p class="note" id="status">Проверяем Twitch…</p></section>
-<section class="card" id="library"><div class="row" style="justify-content:space-between"><h2>Библиотека клипов</h2><button class="button secondary" type="button" onclick="loadClips()">Обновить</button></div>
-<p class="muted">Готовые MP4 из приватного Cloudflare R2. Ссылки на видео действуют ограниченное время.</p>
+<div class="buttons"><button id="capture-start" onclick="captureStart()">Начать запись</button><button class="button secondary" id="capture-stop" onclick="captureStop()">Остановить</button></div></section>
+<section class="card"><h2>Состояние</h2><div class="grid"><div class="metric"><strong id="live">—</strong><small>Стрим</small></div><div class="metric"><strong id="audience">—</strong><small>Зрители</small></div><div class="metric"><strong id="chat">—</strong><small>OAuth чата</small></div></div></section>
+<section class="card" id="library"><div class="top-row"><h2 style="margin:0">Библиотека клипов</h2><button class="button secondary" type="button" onclick="loadClips()">Обновить</button></div>
+<p class="muted compact">Кликни по клипу, чтобы раскрыть действия и посмотреть видео прямо под этим клипом.</p>
 <label for="clip-channel">Канал</label><select id="clip-channel" class="clip-select" onchange="loadClips()"><option value="">Все каналы</option></select>
-<div id="clip-list" aria-live="polite"><p class="muted">Загружаем клипы…</p></div>
-<div class="buttons"><button class="button secondary" id="clip-more" type="button" onclick="loadMoreClips()" style="display:none">Показать ещё</button></div>
-<video id="clip-player" controls playsinline preload="none" style="display:none;width:100%;max-height:480px;margin-top:14px;background:#000;border-radius:12px"></video>
-<p class="note" id="clip-notice"></p></section>
-<section class="card"><div class="row" style="justify-content:space-between"><h2>Топ моментов</h2><span class="muted">до 10</span></div><div id="events"><p class="muted">Загрузка...</p></div></section>
-<p class="note">Автообновление каждые 15 секунд · Отдельный worker должен быть включён в Heroku · Только разрешённые к обработке материалы</p>
+<div id="clip-list" class="accordion-list" aria-live="polite"><p class="muted">Загружаем клипы…</p></div>
+<div class="buttons"><button class="button secondary" id="clip-more" type="button" onclick="loadMoreClips()" style="display:none">Показать ещё</button></div></section>
+<section class="card"><div class="row" style="justify-content:space-between"><h2 style="margin:0">Топ моментов</h2><span class="muted">до 10</span></div><p class="muted compact">Каждый момент можно раскрыть как выпадающий список.</p><div id="events" class="accordion-list"><p class="muted">Загрузка...</p></div></section>
 </main><script>
 const q=s=>document.querySelector(s);
-async function getJson(path,opts){const r=await fetch(path,{cache:'no-store',...opts});let d=await r.json().catch(()=>({detail:'Ошибка сервера'}));if(!r.ok)throw Error(typeof d.detail==='string'?d.detail:'HTTP '+r.status);return d}
-async function save(){let b=q('#save');b.disabled=true;q('#notice').textContent='Сохраняем…';try{const d=await getJson('/api/channel',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url:q('#url').value})});q('#permission').checked=false;q('#notice').textContent='Канал '+d.channel+' сохранён. Worker переключится автоматически; запись выключена до нового подтверждения.';refresh()}catch(e){q('#notice').textContent='Ошибка: '+e.message;q('#notice').className='note error'}finally{b.disabled=false}}
-function txt(el,s){q(el).textContent=String(s)}
-async function refresh(){try{const s=await getJson('/api/status');txt('#live',s.configured===false?'—':(s.live?'LIVE':'OFF'));txt('#audience',s.viewer_count??'—');txt('#chat',s.chat_authorized?'OK':'—');txt('#status',s.configured===false?'Канал ещё не выбран':JSON.stringify({channel:s.channel??q('#url').value,live:s.live,game:s.game_name??null}));}catch(e){txt('#status','Ошибка получения статуса: '+e.message)}try{const list=await getJson('/api/highlights');const e=q('#events');e.replaceChildren();if(!list.length){const p=document.createElement('p');p.className='muted';p.textContent='Пока нет обнаруженных моментов. Мониторинг чата должен быть запущен.';e.append(p)}for(const h of list){const row=document.createElement('div');row.className='event';const left=document.createElement('div');const title=document.createElement('strong');title.textContent=h.reason||'Всплеск чата';const meta=document.createElement('div');meta.className='note';meta.textContent=new Date(h.event_at).toLocaleString('ru-RU')+' · '+h.count_10s+' сообщ. / 10 сек.';left.append(title,meta);const score=document.createElement('span');score.className='score';score.textContent=Number(h.score).toFixed(0)+'/100';row.append(left,score);e.append(row)}}catch(e){txt('#events','Ошибка загрузки моментов: '+e.message)}}
-async function captureStart(){
-  if(!q('#permission').checked){txt('#capture-state','Подтверди разрешение на запись этого канала.');return}
-  try{const d=await getJson('/api/capture/start',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({permission_confirmed:true})});txt('#capture-state','Запуск запрошен для '+d.channel+'; ожидаем подтверждения от capture worker.');refresh()}catch(e){txt('#capture-state','Ошибка: '+e.message)}
-}
-async function captureStop(){try{await getJson('/api/capture/stop',{method:'POST'});txt('#capture-state','Остановка запрошена.');refresh()}catch(e){txt('#capture-state','Ошибка: '+e.message)}}
-async function refreshCapture(){try{const d=await getJson('/api/capture/status');const h=d.worker||{};txt('#capture-state',(d.capture_requested?'Запуск запрошен':'Запись выключена')+' · capture: '+(h.status||'нет данных')+(h.channel?' · '+h.channel:'')+(h.error?' · '+h.error:''));}catch(e){txt('#capture-state','Ошибка: '+e.message)}}
-const oldRefresh=refresh;refresh=async function(){await oldRefresh();await refreshCapture()};
-refresh();setInterval(refresh,15000);
+const qa=s=>Array.from(document.querySelectorAll(s));
 let clipOffset=0;
 const clipLimit=30;
+
+async function getJson(path,opts){const r=await fetch(path,{cache:'no-store',...opts});let d=await r.json().catch(()=>({detail:'Ошибка сервера'}));if(!r.ok)throw Error(typeof d.detail==='string'?d.detail:'HTTP '+r.status);return d}
+function txt(sel,val){const el=q(sel);if(el)el.textContent=String(val)}
+function flashButton(btn,text,ms=1800){if(!btn)return;const original=btn.dataset.original||btn.textContent;btn.dataset.original=original;btn.textContent=text;clearTimeout(btn._flashTimer);btn._flashTimer=setTimeout(()=>{btn.textContent=original},ms)}
+function setButtonBusy(btn,busy=true,busyText='Подождите…'){if(!btn)return; if(!btn.dataset.original)btn.dataset.original=btn.textContent; btn.disabled=busy; btn.textContent=busy?busyText:btn.dataset.original}
+
+async function save(){
+  const b=q('#save');
+  setButtonBusy(b,true,'Сохраняем…');
+  try{
+    const d=await getJson('/api/channel',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url:q('#url').value})});
+    q('#permission').checked=false;
+    setButtonBusy(b,false);
+    flashButton(b,'Сохранено');
+    if(d.channel) q('#url').value=d.channel;
+    await refresh();
+  }catch(e){
+    setButtonBusy(b,false);
+    alert('Ошибка сохранения канала: '+e.message);
+  }
+}
+
+async function captureStart(){
+  if(!q('#permission').checked){alert('Подтверди разрешение на запись этого канала.');return}
+  const b=q('#capture-start');
+  setButtonBusy(b,true,'Запускаем…');
+  try{
+    await getJson('/api/capture/start',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({permission_confirmed:true})});
+    setButtonBusy(b,false);
+    flashButton(b,'Запрос отправлен');
+    await refreshCapture();
+  }catch(e){
+    setButtonBusy(b,false);
+    alert('Ошибка запуска записи: '+e.message);
+  }
+}
+
+async function captureStop(){
+  const b=q('#capture-stop');
+  setButtonBusy(b,true,'Останавливаем…');
+  try{
+    await getJson('/api/capture/stop',{method:'POST'});
+    setButtonBusy(b,false);
+    flashButton(b,'Остановлено');
+    await refreshCapture();
+  }catch(e){
+    setButtonBusy(b,false);
+    alert('Ошибка остановки записи: '+e.message);
+  }
+}
+
+async function refreshStatus(){
+  try{
+    const s=await getJson('/api/status');
+    txt('#live',s.configured===false?'—':(s.live?'LIVE':'OFF'));
+    txt('#audience',s.viewer_count??'—');
+    txt('#chat',s.chat_authorized?'OK':'—');
+  }catch(e){
+    txt('#live','ERR'); txt('#audience','—'); txt('#chat','—');
+  }
+}
+
+async function refreshCapture(){
+  try{
+    const d=await getJson('/api/capture/status');
+    const requested=!!d.capture_requested;
+    const start=q('#capture-start');
+    const stop=q('#capture-stop');
+    if(start && !start.disabled) start.textContent=requested?'Запись активна':'Начать запись';
+    if(stop) stop.disabled=!requested;
+  }catch(e){
+    const stop=q('#capture-stop'); if(stop) stop.disabled=false;
+  }
+}
+
+function closePreviewHost(host){
+  const preview=host.querySelector('.clip-preview');
+  const video=host.querySelector('video');
+  if(video){video.pause();video.removeAttribute('src');video.load();}
+  if(preview){preview.hidden=true;preview.classList.remove('open');}
+}
+
+function closeAllClipPreviews(exceptId=null){
+  qa('.clip-preview').forEach(preview=>{
+    if(exceptId!==null && preview.dataset.clipId===String(exceptId)) return;
+    const host=preview.closest('.accordion-item');
+    if(host) closePreviewHost(host);
+  });
+}
+
+function buildSummary(titleText,metaText,scoreText){
+  const summary=document.createElement('summary');
+  const left=document.createElement('div'); left.className='summary-left';
+  const arrow=document.createElement('span'); arrow.className='summary-arrow'; arrow.textContent='›';
+  const text=document.createElement('div'); text.className='summary-text';
+  const strong=document.createElement('strong'); strong.textContent=titleText;
+  const meta=document.createElement('div'); meta.className='summary-meta'; meta.textContent=metaText;
+  text.append(strong,meta); left.append(arrow,text);
+  const score=document.createElement('span'); score.className='score'; score.textContent=scoreText;
+  summary.append(left,score);
+  return summary;
+}
+
+function buildClipItem(clip){
+  const details=document.createElement('details');
+  details.className='accordion-item';
+  const title=clip.channel+' · '+new Date(clip.event_at).toLocaleString('ru-RU');
+  const meta=clip.reason || 'Событие чата';
+  const score=clip.score==null?'—':Math.round(clip.score)+'/100';
+  details.append(buildSummary(title,meta,score));
+
+  const body=document.createElement('div'); body.className='accordion-body';
+  const hint=document.createElement('div'); hint.className='hint';
+  hint.textContent='Время события: '+new Date(clip.event_at).toLocaleString('ru-RU');
+
+  const actions=document.createElement('div'); actions.className='clip-actions';
+  const play=document.createElement('button'); play.type='button'; play.textContent='▶ Смотреть';
+  const download=document.createElement('a'); download.className='button secondary'; download.href='/api/clips/'+clip.id+'/download'; download.textContent='Скачать MP4'; download.rel='noreferrer';
+
+  const preview=document.createElement('div'); preview.className='clip-preview'; preview.hidden=true; preview.dataset.clipId=String(clip.id);
+  const previewHead=document.createElement('div'); previewHead.className='clip-preview-head';
+  const previewTitle=document.createElement('div'); previewTitle.className='clip-preview-title'; previewTitle.textContent='Предпросмотр клипа';
+  const close=document.createElement('button'); close.type='button'; close.className='icon-close'; close.textContent='✕'; close.title='Закрыть видео';
+  const video=document.createElement('video'); video.controls=true; video.playsInline=true; video.preload='none';
+  previewHead.append(previewTitle,close); preview.append(previewHead,video);
+
+  play.onclick=()=>{
+    closeAllClipPreviews(clip.id);
+    preview.hidden=false;
+    preview.classList.add('open');
+    if(!details.open) details.open=true;
+    const nextSrc='/api/clips/'+clip.id+'/play';
+    if(video.getAttribute('src')!==nextSrc){video.src=nextSrc; video.load();}
+    video.play().catch(()=>{});
+    preview.scrollIntoView({behavior:'smooth',block:'nearest'});
+  };
+  close.onclick=()=>closePreviewHost(details);
+  details.addEventListener('toggle',()=>{ if(!details.open) closePreviewHost(details); });
+
+  actions.append(play,download);
+  body.append(hint,actions,preview);
+  details.append(body);
+  return details;
+}
+
 async function loadClips(append=false){
   const list=q('#clip-list');
   if(!append){clipOffset=0;list.replaceChildren();}
@@ -48,28 +175,51 @@ async function loadClips(append=false){
     const data=await getJson('/api/clips?limit='+clipLimit+'&offset='+clipOffset+'&channel='+encodeURIComponent(channel));
     const select=q('#clip-channel'); const saved=select.value;
     select.replaceChildren();
-    const all=document.createElement('option');all.value='';all.textContent='Все каналы';select.append(all);
-    for(const name of data.channels){const o=document.createElement('option');o.value=name;o.textContent=name;select.append(o)}
+    const all=document.createElement('option'); all.value=''; all.textContent='Все каналы'; select.append(all);
+    for(const name of data.channels){const o=document.createElement('option'); o.value=name; o.textContent=name; select.append(o)}
     select.value=saved;
-    for(const clip of data.items){
-      const node=document.createElement('div');node.className='event';
-      const body=document.createElement('div');body.style.width='100%';
-      const info=document.createElement('div');info.className='clip-info';
-      const title=document.createElement('strong');title.textContent=clip.channel+' · '+new Date(clip.event_at).toLocaleString('ru-RU');
-      const score=document.createElement('span');score.className='score';score.textContent=clip.score==null?'—':Math.round(clip.score)+'/100';
-      info.append(title,score);
-      const reason=document.createElement('p');reason.className='note';reason.textContent=clip.reason||'Событие чата';
-      const actions=document.createElement('div');actions.className='clip-actions';
-      const play=document.createElement('button');play.type='button';play.textContent='▶ Смотреть';
-      play.onclick=()=>{const player=q('#clip-player');player.style.display='block';player.src='/api/clips/'+clip.id+'/play';player.load();q('#clip-notice').textContent='Если видео не открывается, проверь разрешения R2 или попробуй скачать файл.';player.scrollIntoView({behavior:'smooth',block:'nearest'})};
-      const dl=document.createElement('a');dl.className='button secondary';dl.href='/api/clips/'+clip.id+'/download';dl.textContent='Скачать MP4';dl.rel='noreferrer';
-      actions.append(play,dl);body.append(info,reason,actions);node.append(body);list.append(node);
-    }
+    for(const clip of data.items){ list.append(buildClipItem(clip)); }
     clipOffset+=data.items.length;
     q('#clip-more').style.display=data.has_more?'inline-flex':'none';
-    if(!list.children.length){const p=document.createElement('p');p.className='muted';p.textContent='Загруженных клипов пока нет.';list.append(p)}
-  }catch(err){const p=document.createElement('p');p.className='error';p.textContent='Не удалось загрузить клипы: '+err.message;list.append(p)}
+    if(!list.children.length){const p=document.createElement('p'); p.className='muted'; p.textContent='Загруженных клипов пока нет.'; list.append(p)}
+  }catch(err){
+    const p=document.createElement('p'); p.className='error'; p.textContent='Не удалось загрузить клипы: '+err.message; list.append(p)
+  }
 }
 function loadMoreClips(){loadClips(true)}
+
+function buildHighlightItem(h){
+  const details=document.createElement('details');
+  details.className='accordion-item';
+  const title=h.reason||'Всплеск чата';
+  const meta=new Date(h.event_at).toLocaleString('ru-RU');
+  const score=(h.score==null?'—':Number(h.score).toFixed(0)+'/100');
+  details.append(buildSummary(title,meta,score));
+  const body=document.createElement('div'); body.className='accordion-body';
+  const line1=document.createElement('div'); line1.className='hint'; line1.textContent='Время: '+new Date(h.event_at).toLocaleString('ru-RU');
+  const line2=document.createElement('div'); line2.className='hint'; line2.textContent=h.count_10s+' сообщ. / 10 сек. · baseline '+h.baseline+' · unique users '+h.unique_users;
+  body.append(line1,line2);
+  details.append(body);
+  return details;
+}
+
+async function refreshHighlights(){
+  try{
+    const list=await getJson('/api/highlights');
+    const e=q('#events'); e.replaceChildren();
+    if(!list.length){const p=document.createElement('p'); p.className='muted'; p.textContent='Пока нет обнаруженных моментов.'; e.append(p); return;}
+    for(const h of list){ e.append(buildHighlightItem(h)); }
+  }catch(e){
+    const box=q('#events'); box.replaceChildren();
+    const p=document.createElement('p'); p.className='error'; p.textContent='Ошибка загрузки моментов: '+e.message; box.append(p);
+  }
+}
+
+async function refresh(){
+  await Promise.all([refreshStatus(), refreshCapture(), refreshHighlights()]);
+}
+
 loadClips();
+refresh();
+setInterval(refresh,15000);
 </script></body></html>
